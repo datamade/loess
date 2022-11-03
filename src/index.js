@@ -6,7 +6,6 @@ import {
   weightFunc, normalize, transpose, distMatrix, weightMatrix,
   polynomialExpansion, weightedLeastSquare
 } from './helpers.js'
-// import data from '../data/gas.json'
 
 const config = { }
 const math = create(all, config)
@@ -64,7 +63,7 @@ export default class Loess {
       const halfwidth = weights.map((weight, idx) => {
         const V1 = math.sum(weight)
         const V2 = math.multiply(weight, weight)
-        const intervalEstimate = Math.sqrt(math.multiply(math.square(residuals[idx]), weight) / (V1 - V2 / V1))
+        const intervalEstimate = Math.sqrt(math.multiply(math.map(residuals[idx], math.square), weight) / (V1 - V2 / V1))
         return intervalEstimate * z
       })
       Object.assign(output, { halfwidth })
@@ -103,6 +102,8 @@ export default class Loess {
   }
 }
 
+// import * as fs from 'fs';
+// let data = JSON.parse(fs.readFileSync('./data/gas.json'));
 // const w = data.NOx.map(() => Math.random() * 10)
 // const fit = new Loess({y: data.NOx, x: data.E, w}, {span: 0.8, band: 0.8, degree: 'quadratic'})
 // console.log(JSON.stringify(fit.predict(fit.grid([30]))))
