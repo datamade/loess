@@ -16,6 +16,7 @@ jobs:
         with:
           registry-url: 'https://npm.pkg.github.com'
           always-auth: true
+          scope: @datamade
       - run: cat /home/runner/work/_temp/.npmrc    
       - run: npm install    
       - run: npm ci
