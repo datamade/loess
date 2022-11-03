@@ -1,11 +1,14 @@
 /* eslint-env mocha */
-import {expect} from 'chai'
-import math from 'mathjs'
+import { expect } from 'chai'
+import { create, all } from 'mathjs'
 import {
   weightFunc, normalize, transpose,
   euclideanDist, distMatrix, weightMatrix,
   polynomialExpansion, weightedLeastSquare
-} from '../src/helpers'
+} from '../src/helpers.js'
+
+const config = { }
+const math = create(all, config)
 
 describe('function weightFunc', function () {
   it('should return (1-(d/dmax)^n)^n if d < dmax', function () {
@@ -159,11 +162,17 @@ describe('function weightedLeastSquare', function () {
   }
 
   it('should return vector of fitted parameters (w/o weights)', function () {
-    expect(weightedLeastSquare(caseOne.x, caseOne.y, caseOne.w)).to.eql(caseOne.expect)
+    const result = weightedLeastSquare(caseOne.x, caseOne.y, caseOne.w)
+    expect(math.deepEqual(result.beta, caseOne.expect.beta)) &&
+      expect(math.deepEqual(result.yhat, caseOne.expect.yhat)) &&
+      expect(math.deepEqual(result.residual, caseOne.expect.residual))
   })
 
   it('should return vector of fitted parameters (with weights)', function () {
-    expect(weightedLeastSquare(caseTwo.x, caseTwo.y, caseTwo.w)).to.eql(caseTwo.expect)
+    const result = weightedLeastSquare(caseTwo.x, caseTwo.y, caseTwo.w)
+    expect(math.deepEqual(result.beta, caseTwo.expect.beta)) &&
+      expect(math.deepEqual(result.yhat, caseTwo.expect.yhat)) &&
+      expect(math.deepEqual(result.residual, caseTwo.expect.residual))
   })
 
   it('should return error object if x is non-invertible', function () {

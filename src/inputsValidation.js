@@ -14,7 +14,7 @@ function validateIsInteger (target, msg) {
 export function validateModel (data, options) {
   if (!data) throw new Error('no data passed in to constructor')
   if (typeof data !== 'object') throw new Error('no data passed in to constructor')
-  let {y, x, x2, w} = data
+  let { y, x, x2, w } = data
 
   validateIsArray(y, 'Invalid type: y should be an array')
   validateIsArray(x, 'Invalid type: x should be an array')
@@ -73,30 +73,30 @@ export function validateModel (data, options) {
   const d = x2 ? 2 : 1
   const bandwidth = options.span > 1 ? Math.pow(options.span, 1 / d) : options.span
 
-  return {y, x, w, n, d, options, bandwidth}
+  return { y, x, w, n, d, options, bandwidth }
 }
 
 export function validatePredict (data) {
-  if (!data) data = {x: this.x[0], x2: this.x[1]}
+  if (!data) data = { x: this.x[0], x2: this.x[1] }
   if (typeof data !== 'object') throw new Error('Invalid type: data should be supplied as an object')
 
-  let {x, x2 = null} = data
+  const { x, x2 = null } = data
 
   validateIsArray(x, 'Invalid type: x should be an array')
   x.forEach(v => validateIsNumber(v, 'Invalid type: x should include only numbers'))
 
-  const x_new = [x]
+  const xNew = [x]
   const n = x.length
 
   if (this.d > 1) {
     validateIsArray(x2, 'Invalid type: x2 should be an array')
     x2.forEach(v => validateIsNumber(v, 'Invalid type: x2 should include only numbers'))
     if (x2.length !== n) throw new Error('x and x2 have different length')
-    x_new.push(x2)
+    xNew.push(x2)
   } else if (x2) {
     throw new Error('extra variable x2')
   }
-  return {x_new, n}
+  return { xNew, n }
 }
 
 export function validateGrid (cuts) {

@@ -1,6 +1,9 @@
-import math from 'mathjs'
+import { create, all } from 'mathjs'
 import sort from 'lodash.sortby'
 import zip from 'lodash.zip'
+
+const config = { }
+const math = create(all, config)
 
 export function weightFunc (d, dmax, degree) {
   return d < dmax ? Math.pow(1 - Math.pow(d / dmax, degree), degree) : 0
@@ -8,8 +11,8 @@ export function weightFunc (d, dmax, degree) {
 
 export function normalize (referenceArr) {
   const cutoff = Math.ceil(0.1 * referenceArr.length)
-  const trimmed_arr = sort(referenceArr).slice(cutoff, referenceArr.length - cutoff)
-  const sd = math.std(trimmed_arr)
+  const trimmedArr = sort(referenceArr).slice(cutoff, referenceArr.length - cutoff)
+  const sd = math.std(trimmedArr)
   return function (outputArr) {
     return outputArr.map(val => val / sd)
   }
@@ -40,11 +43,11 @@ export function weightMatrix (distMat, inputWeights, bandwidth) {
     const sorted = sort(zip(distVect, inputWeights), (v) => v[0])
     const cutoff = math.sum(inputWeights) * bandwidth
     let sumOfWeights = 0
-    let cutoffIndex = sorted.findIndex(v => {
+    const cutoffIndex = sorted.findIndex(v => {
       sumOfWeights += v[1]
       return sumOfWeights >= cutoff
     })
-    let dmax = bandwidth > 1
+    const dmax = bandwidth > 1
       ? (sorted[sorted.length - 1][0] * bandwidth)
       : sorted[cutoffIndex][0]
     return math.dotMultiply(distVect.map(d => weightFunc(d, dmax, 3)), inputWeights)
@@ -79,8 +82,8 @@ export function weightedLeastSquare (predictors, response, weights) {
     const beta = math.multiply(math.inv(LHS), RHS)
     const yhat = math.squeeze(math.multiply(beta, predictors))
     const residual = math.subtract(response, yhat)
-    return {beta, yhat, residual}
+    return { beta, yhat, residual }
   } catch (err) {
-    return {error: err}
+    return { error: err }
   }
 }
