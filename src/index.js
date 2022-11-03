@@ -1,12 +1,15 @@
-import math from 'mathjs'
+import { create, all } from 'mathjs'
 import sort from 'lodash.sortby'
 import gaussian from 'gaussian'
-import { validateModel, validatePredict, validateGrid } from './inputsValidation'
+import { validateModel, validatePredict, validateGrid } from './inputsValidation.js'
 import {
   weightFunc, normalize, transpose, distMatrix, weightMatrix,
   polynomialExpansion, weightedLeastSquare
-} from './helpers'
+} from './helpers.js'
 // import data from '../data/gas.json'
+
+const config = { }
+const math = create(all, config)
 
 export default class Loess {
   constructor (data, options = {}) {
